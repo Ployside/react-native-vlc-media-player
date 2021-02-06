@@ -205,10 +205,10 @@ export default class VLCPlayerView extends Component {
                 <Icon name={'chevron-left'} size={30} color="#fff" />
               </TouchableOpacity>
             )}
-            <View style={{ justifyContent: 'center', flex: 1, marginRight: 10 }}>
+            <View style={{ justifyContent: 'center', flex: 1, marginRight: 10,marginLeft:10 }}>
               {showTitle &&
                 showControls && (
-                  <Text style={{ color: '#fff', fontSize: 16 }} numberOfLines={1}>
+                  <Text style={{ color: '#fff', fontSize: 20 }} numberOfLines={1}>
                     {title}
                   </Text>
                 )}
@@ -239,7 +239,9 @@ export default class VLCPlayerView extends Component {
               currentTime={this.state.currentTime}
               totalTime={this.state.totalTime}
               onPausedPress={this._play}
-              onFullPress={this._toFullScreen}
+              onFullPress={
+                onLeftPress
+              }
               onValueChange={value => {
                 this.changingSlider = true;
                 this.setState({
