@@ -20,15 +20,17 @@ export default class ControlBtn extends Component {
   static defaultProps = {
     titleGolive: 'Go live',
     showLeftButton: true,
-    showMiddleButton: true,
+    showMiddleButton: false,
     showRightButton: true
   }
+
 
   _getTime = (data = 0) => {
     let hourCourse = Math.floor(data / 3600);
     let diffCourse = data % 3600;
     let minCourse = Math.floor(diffCourse / 60);
     let secondCourse = Math.floor(diffCourse % 60);
+    
     let courseReal = '';
     if (hourCourse) {
       if (hourCourse < 10) {
@@ -68,7 +70,9 @@ export default class ControlBtn extends Component {
       onLeftPress,
       title,
       onEnd,
+      onHideControlsTimeout,
       titleGolive,
+      hideControls,
       showLeftButton,
       showMiddleButton,
       showRightButton,
@@ -83,13 +87,15 @@ export default class ControlBtn extends Component {
                 {
                   showLeftButton ? (
                     <TouchableOpacity
-                      activeOpacity={1}
-                      onPress={() => {
-                        onReplayPress && onReplayPress();
-                      }}
-                      style={{ width: 50, alignItems: 'center', justifyContent: 'center' }}>
-                      <Icon name={'replay'} size={30} color="#fff" />
-                    </TouchableOpacity>
+                    activeOpacity={1}
+                    onPress={() => {
+                      onHideControlsTimeout  && onHideControlsTimeout();
+                      onPausedPress && onPausedPress(!paused);
+
+                    }}
+                    style={{ width: 50, alignItems: 'center', justifyContent: 'center' }}>
+                    <Icon name={paused ? 'play' : 'pause'} size={30} color="#fff" />
+                  </TouchableOpacity>
                   ) : <View style={{ width: 50 }} />
                 }
                 <Text
@@ -97,6 +103,7 @@ export default class ControlBtn extends Component {
               </View>
 
               {
+
                 showMiddleButton && (
                   <TouchableOpacity
                     activeOpacity={1}
@@ -161,10 +168,11 @@ export default class ControlBtn extends Component {
                     <TouchableOpacity
                       activeOpacity={1}
                       onPress={() => {
-                        onFullPress && onFullPress(!isFull);
+                        hideControls  && hideControls();
+                        onFullPress && onFullPress();
                       }}
                       style={{ width: 50, alignItems: 'center', justifyContent: 'center' }}>
-                      <Icon name={isFull ? 'fullscreen-exit' : 'fullscreen'} size={30} color="#fff" />
+                      <Icon name='television-box'  size={30} color="#fff" />
                     </TouchableOpacity>
                   ) : <View style={{ width: 50 }} />
                 }
@@ -222,7 +230,7 @@ const styles = StyleSheet.create({
   controlContent2: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(2,13,24,0.5)',
     alignItems: 'center',
     justifyContent: 'space-between',
   },

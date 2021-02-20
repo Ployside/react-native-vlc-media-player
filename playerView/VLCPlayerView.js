@@ -62,6 +62,7 @@ export default class VLCPlayerView extends Component {
       this.setState({
         showControls: true,
       });
+   
     }
   }
 
@@ -71,6 +72,11 @@ export default class VLCPlayerView extends Component {
     if (this.bufferInterval) {
       clearInterval(this.bufferInterval);
       this.bufferInterval = null;
+    }
+
+    if(this.hideControlsTimeout){
+      clearTimeout(this.hideControlsTimeout);
+      this.hideControlsTimeout = null
     }
 
   }
@@ -138,6 +144,7 @@ export default class VLCPlayerView extends Component {
         style={[styles.videoBtn, style]}
         onPressOut={() => {
           let currentTime = new Date().getTime();
+          this.hideControls();
           if (this.touchTime === 0) {
             this.touchTime = currentTime;
             this.setState({ showControls: !this.state.showControls });
@@ -205,10 +212,10 @@ export default class VLCPlayerView extends Component {
                 <Icon name={'chevron-left'} size={30} color="#fff" />
               </TouchableOpacity>
             )}
-            <View style={{ justifyContent: 'center', flex: 1, marginRight: 10 }}>
+            <View style={{ justifyContent: 'center', flex: 1, marginRight: 10,marginLeft:10 }}>
               {showTitle &&
                 showControls && (
-                  <Text style={{ color: '#fff', fontSize: 16 }} numberOfLines={1}>
+                  <Text style={{ color: '#fff', fontSize: 20 }} numberOfLines={1}>
                     {title}
                   </Text>
                 )}
@@ -239,7 +246,11 @@ export default class VLCPlayerView extends Component {
               currentTime={this.state.currentTime}
               totalTime={this.state.totalTime}
               onPausedPress={this._play}
-              onFullPress={this._toFullScreen}
+              onHideControlsTimeout={this.hideControls}
+              hideControls={this.hideControlsTimeoutFunction}
+              onFullPress={
+                onLeftPress
+              }
               onValueChange={value => {
                 this.changingSlider = true;
                 this.setState({
@@ -293,6 +304,24 @@ export default class VLCPlayerView extends Component {
     console.log('onPaused');
   }
 
+
+
+  hideControls = () => {
+    if(this.hideControlsTimeout){
+      clearTimeout(this.hideControlsTimeout);
+      this.hideControlsTimeout = null;
+    }
+    this.hideControlsTimeout = setTimeout(this.hideControlsTimeoutFunction,3000);
+  }
+
+  hideControlsTimeoutFunction = () => {
+    if(this.state.showControls){
+      this.setState({showControls:false})
+      clearTimeout(this.hideControlsTimeout)
+    }
+  }
+
+
   /**
    * 视屏缓冲
    * @param event
@@ -328,6 +357,9 @@ export default class VLCPlayerView extends Component {
       console.log('remove  bufferIntervalFunction');
     }
   };
+
+  
+  
 
   _onError = e => {
     // [bavv add start]
