@@ -70,7 +70,9 @@ export default class ControlBtn extends Component {
       onLeftPress,
       title,
       onEnd,
+      onHideControlsTimeout,
       titleGolive,
+      hideControls,
       showLeftButton,
       showMiddleButton,
       showRightButton,
@@ -87,7 +89,9 @@ export default class ControlBtn extends Component {
                     <TouchableOpacity
                     activeOpacity={1}
                     onPress={() => {
+                      onHideControlsTimeout  && onHideControlsTimeout();
                       onPausedPress && onPausedPress(!paused);
+
                     }}
                     style={{ width: 50, alignItems: 'center', justifyContent: 'center' }}>
                     <Icon name={paused ? 'play' : 'pause'} size={30} color="#fff" />
@@ -164,6 +168,7 @@ export default class ControlBtn extends Component {
                     <TouchableOpacity
                       activeOpacity={1}
                       onPress={() => {
+                        hideControls  && hideControls();
                         onFullPress && onFullPress();
                       }}
                       style={{ width: 50, alignItems: 'center', justifyContent: 'center' }}>
