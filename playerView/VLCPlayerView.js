@@ -60,7 +60,7 @@ export default class VLCPlayerView extends Component {
   componentDidMount() {
     if (this.props.isFull) {
       this.setState({
-        showControls: true,
+        showControls: false,
       });
    
     }
