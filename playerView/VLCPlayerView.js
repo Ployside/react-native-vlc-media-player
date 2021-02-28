@@ -435,7 +435,7 @@ export default class VLCPlayerView extends Component {
   };
 
   _reload = () => {
-    if (!this.reloadSuccess) {
+    if (!this.reloadSuccess && this.vlcPlayer) {
       this.vlcPlayer.resume && this.vlcPlayer.resume(false);
     }
   };
@@ -495,7 +495,7 @@ export default class VLCPlayerView extends Component {
         () => {
           if (!this.isEnding) {
             onEnd && onEnd();
-            if (!isGG) {
+            if (!isGG && this.vlcPlayer) {
               this.vlcPlayer.resume && this.vlcPlayer.resume(false);
               console.log(this.props.uri + ':   onEnded');
             } else {
