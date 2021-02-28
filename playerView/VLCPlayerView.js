@@ -20,6 +20,7 @@ import TimeLimt from './TimeLimit';
 import ControlBtn from './ControlBtn';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getStatusBarHeight } from './SizeController';
+import Video from 'react-native-video';
 const statusBarHeight = getStatusBarHeight();
 let deviceHeight = Dimensions.get('window').height;
 let deviceWidth = Dimensions.get('window').width;
@@ -31,7 +32,7 @@ export default class VLCPlayerView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      paused: true,
+      paused: false,
       isLoading: true,
       loadingSuccess: false,
       isFull: false,
@@ -67,7 +68,9 @@ export default class VLCPlayerView extends Component {
   }
 
   componentWillUnmount() {
-    this.vlcPlayer._onStopped()
+    if(this.vlcPlayer){
+      this.vlcPlayer._onStopped()
+    }
 
     if (this.bufferInterval) {
       clearInterval(this.bufferInterval);
@@ -101,6 +104,7 @@ export default class VLCPlayerView extends Component {
       closeFullScreen,
       showBack,
       showTitle,
+      ism3u8,
       videoAspectRatio,
       showGoLive,
       onGoLivePress,
@@ -155,7 +159,8 @@ export default class VLCPlayerView extends Component {
             }
           }
         }}>
-        <VLCPlayer
+
+        { !ism3u8 ? <VLCPlayer
           ref={ref => (this.vlcPlayer = ref)}
           paused={this.state.paused}
           //seek={this.state.seek}
@@ -173,7 +178,21 @@ export default class VLCPlayerView extends Component {
           onError={this._onError}
           onOpen={this._onOpen}
           onLoadStart={this._onLoadStart}
+        /> 
+        :
+        <Video source={source}   
+        onProgress={this.onProgress.bind(this)}
+        paused={this.state.paused}
+        onVideoBuffer={this.onBuffering.bind(this)}
+        onBuffer={this.onBuffering.bind(this)}
+        onEnd={this.onEnded.bind(this)}
+        onError={this._onError}
+        resizeMode="contain"
+        style={[styles.video]}
         />
+      }
+
+
         {realShowLoding &&
           !isError && (
             <View style={styles.loading}>
