@@ -211,7 +211,7 @@ export default class VLCPlayerView extends Component {
                 justifyContent: 'center',
                 marginTop: 10,
               }}>
-              <Icon name={'reload'} size={45} color="#fff" />
+              {!ism3u8 && <Icon name={'reload'} size={45} color="#fff" />}
             </TouchableOpacity>
           </View>
         )}
